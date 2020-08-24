@@ -1,13 +1,17 @@
 {
   "name": "me-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API backend section of jsramverk course",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "auro17",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arwebSE/jsramverk-api.git"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
