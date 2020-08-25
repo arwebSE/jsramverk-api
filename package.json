@@ -4,7 +4,8 @@
     "description": "API backend section of jsramverk course",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon app.js"
+        "start": "nodemon app.js",
+        "prod": "set NODE_ENV=production& nodemon app.js"
     },
     "author": "auro17",
     "license": "ISC",
