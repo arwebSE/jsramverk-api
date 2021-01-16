@@ -6,8 +6,9 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 1337;
 
-const auth = require('./routes/auth');
 const index = require('./routes/index');
+const login = require('./routes/login');
+const register = require('./routes/register');
 const reports = require('./routes/reports');
 
 app.use(cors());
@@ -17,8 +18,9 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // Routes
-app.use('/auth', auth);
 app.use('/', index);
+app.use('/login', login);
+app.use('/register', register);
 app.use('/reports',  reports);
 
 // Add routes for 404 and error handling
