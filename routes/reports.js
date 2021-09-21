@@ -23,7 +23,7 @@ const checkToken = (req, res, next) => {
 router.post('/', checkToken, (req, res) => {
     //verify the JWT token generated for the user
     jwt.verify(req.token, secret, (err, authorizedData) => {
-        if (err){
+        if (err) {
             //If error send Forbidden (403)
             console.log('ERROR: Could not connect to the protected route');
             res.sendStatus(403);
@@ -39,14 +39,13 @@ router.post('/', checkToken, (req, res) => {
 
 router.get('/week/1', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"sdasyn på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jd"
+        data: [{
+                "question": "sdasyn på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jd"
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });
@@ -54,14 +53,13 @@ router.get('/week/1', function(req, res) {
 
 router.get('/week/2', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"kmom02d ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
+        data: [{
+                "question": "kmom02d ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });
@@ -69,14 +67,13 @@ router.get('/week/2', function(req, res) {
 
 router.get('/week/3', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"kmom03 ejs backend ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
+        data: [{
+                "question": "kmom03 ejs backend ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });
@@ -84,14 +81,13 @@ router.get('/week/3', function(req, res) {
 
 router.get('/week/4', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"4 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
+        data: [{
+                "question": "4 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });
@@ -99,14 +95,13 @@ router.get('/week/4', function(req, res) {
 
 router.get('/week/5', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"5 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
+        data: [{
+                "question": "5 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });
@@ -114,28 +109,26 @@ router.get('/week/5', function(req, res) {
 
 router.get('/week/6', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"6 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
+        data: [{
+                "question": "6 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });
 });
 router.get('/week/10', function(req, res) {
     res.json({
-        data: [
-            {
-                "question":"10 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
-                "answer":"Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
+        data: [{
+                "question": "10 på nodejs backend ramverk och berätta vilket ramverk du valde och varför.",
+                "answer": "Jag valde expressjs som backend ramverk, då jag har stor tidigare erfarenhet med det ramverket och att det är det mest använda nodejs ramverket."
             },
             {
-                "question":"Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
-                "answer":"Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
+                "question": "Berätta om din katalogstruktur och hur du organiserade din kod, hur tänkte du?",
+                "answer": "Jag skapade en katalog med routes, som liknar det som kommer från scaffoldingen med express. Varje route fil exporterar en router."
             }
         ]
     });

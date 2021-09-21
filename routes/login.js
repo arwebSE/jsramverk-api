@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const bodyParser = require("body-parser");
-router.use(bodyParser.urlencoded({extended: true}));
-router.use(bodyParser.json());
+router.use(express.urlencoded({ extended: true }));
+router.use(express.json());
 
 const bcrypt = require('bcryptjs');
 const sqlite3 = require('sqlite3').verbose();
@@ -26,8 +25,7 @@ router.post('/', (req, result) => {
                 if (res) {
                     jwt.sign({ user: user }, secret, { expiresIn: '1h' }, (err, token) => {
                         //send login token
-                        if (err) { console.log(err); }
-                        else {
+                        if (err) { console.log(err); } else {
                             console.log("Logged in! User:", user);
                             return result.json(token);
                         }

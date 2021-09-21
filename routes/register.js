@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const bodyParser = require("body-parser");
-router.use(bodyParser.urlencoded({extended: true}));
-router.use(bodyParser.json());
+router.use(express.urlencoded({ extended: true }));
+router.use(express.json());
 
 const bcrypt = require('bcryptjs');
 const sqlite3 = require('sqlite3').verbose();
@@ -15,13 +14,13 @@ function hashPass(user, pass) {
             console.log("Hashing error!", err);
         } else {
             db.run("INSERT INTO users (username, password) VALUES (?, ?)",
-            user, hash, (err) => {
-                if (err) {
-                    console.log("DB register error!", err);
-                } else {
-                    console.log(`Registered user "${user}" in DB.`);
-                }
-            });
+                user, hash, (err) => {
+                    if (err) {
+                        console.log("DB register error!", err);
+                    } else {
+                        console.log(`Registered user "${user}" in DB.`);
+                    }
+                });
         }
     });
 }
