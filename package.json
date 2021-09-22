@@ -4,7 +4,8 @@
     "description": "API backend section of jsramverk course",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon app.js",
+        "start": "node app.js",
+        "watch": "nodemon app.js",
         "prod": "set NODE_ENV=production& nodemon app.js"
     },
     "author": "auro17",
@@ -22,7 +23,5 @@
         "mongodb": "^4.1.1",
         "morgan": "^1.10.0"
     },
-    "devDependencies": {
-        "nodemon": "^2.0.12"
-    }
+    "devDependencies": {}
 }

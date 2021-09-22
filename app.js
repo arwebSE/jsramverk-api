@@ -1,9 +1,9 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
-const port = 1337;
+const port = process.env.PORT;
 const morgan = require('morgan');
 const cors = require('cors');
-require('dotenv').config()
 
 const DB_HOST = process.env.DB_HOST
 const DB_NAME = process.env.DB_NAME
