@@ -13,10 +13,6 @@ if (process.env.NODE_ENV == "test") {
     dsn = "mongodb://localhost:27017/test";
 }
 
-const index = require('./routes/index');
-//const login = require('./routes/login');
-//const register = require('./routes/register');
-//const reports = require('./routes/reports');
 const docs = require('./routes/docs');
 
 app.use(cors());
@@ -26,15 +22,12 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 /** Routes **/
-//app.use('/login', login);
-//app.use('/register', register);
-//app.use('/reports',  reports);
 app.use('/docs', docs);
 
 app.get('/', function(req, res) {
     res.json({
         data: {
-            msg: "hello! this is site index page"
+            msg: `Index. DSN host: ${DB_HOST}`
         }
     });
 });
