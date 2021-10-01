@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node src/app.js",
-        "watch": "nodemon src/app.js",
+        "watch": "nodemon -L --watch src src/app.js",
         "prod": "set NODE_ENV=production& nodemon src/app.js"
     },
     "author": "auro17",
@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",
+        "chalk": "^4.1.2",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.17.1",

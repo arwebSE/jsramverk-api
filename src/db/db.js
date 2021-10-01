@@ -5,9 +5,10 @@ const DB_HOST = process.env.DB_HOST
 const DB_NAME = process.env.DB_NAME
 const DB_USER = process.env.DB_USER
 const DB_PASS = process.env.DB_PASS
-const dsn = `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
-if (process.env.NODE_ENV == "test") { dsn = "mongodb://localhost:27017/test" }
-const client = new MongoClient(dsn, { useNewUrlParser: true, useUnifiedTopology: true })
+const DSN = `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
+const maskedDSN = `mongodb+srv://${DB_USER}:<PASSWD>@${DB_HOST}/${DB_NAME}`;
+if (process.env.NODE_ENV == "test") { DSN = "mongodb://localhost:27017/test" }
+const client = new MongoClient(DSN, { useNewUrlParser: true, useUnifiedTopology: true })
 const COLLECTION = "docs";
 
 const fs = require("fs")
@@ -15,6 +16,12 @@ const path = require("path")
 const data = JSON.parse(fs.readFileSync(
     path.resolve(__dirname, "setup.json"), "utf8"
 ))
+
+const chalk = require("chalk");
+
+function getDSN() {
+    return maskedDSN
+}
 
 /**
  * Reset a collection by removing existing content and insert a default
@@ -42,7 +49,6 @@ async function list() {
     } catch (err) {
         console.log(err)
     } finally {
-        // Ensures that the client will close when you finish/error
         await client.close()
     }
 }
@@ -83,4 +89,4 @@ async function update(filter, content, options) {
     }
 }
 
-module.exports = { reset, list, create, update }
+module.exports = { reset, list, create, update, getDSN }
