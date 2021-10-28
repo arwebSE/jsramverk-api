@@ -4,9 +4,11 @@
     "description": "API backend section of jsramverk course",
     "main": "index.js",
     "scripts": {
-        "start": "node src/app.js",
-        "watch": "nodemon -L --watch src src/app.js",
-        "prod": "set NODE_ENV=production& nodemon src/app.js"
+        "start": "set NODE_ENV=dev& node src/index.js",
+        "watch": "set NODE_ENV=dev& nodemon -L --watch src src/index.js",
+        "prod": "set NODE_ENV=prod& node src/index.js",
+        "test": "set NODE_ENV=test& nyc --reporter=html --reporter=text mocha 'test/**/*.js'",
+        "socket": "set NODE_ENV=dev& node src/socket.js"
     },
     "author": "auro17",
     "license": "ISC",
@@ -22,7 +24,16 @@
         "express": "^4.17.1",
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^4.1.1",
-        "morgan": "^1.10.0"
+        "morgan": "^1.10.0",
+        "socket.io": "^4.3.1"
     },
-    "devDependencies": {}
+    "devDependencies": {
+        "env-cmd": "^10.1.0",
+        "mocha": "^9.1.3",
+        "nyc": "^15.1.0"
+    },
+    "optionalDependencies": {
+        "bufferutil": "^4.0.5",
+        "utf-8-validate": "^5.0.7"
+    }
 }

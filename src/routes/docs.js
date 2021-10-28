@@ -7,18 +7,18 @@ router.use(express.json());
 const db = require('../db/db.js');
 
 /* ROUTES */
-
 router.get('/reset', async(req, res) => {
     await db.reset()
     res.json("Reset DB!")
 })
 
-// Return a JSON object with list of all documents within the collection.
+// List all docs
 router.get("/list", async(req, res) => {
     let result = await db.list()
     res.status(200).json(result)
 })
 
+// Create doc
 router.post('/create', async(req, res) => {
     const doc = {
         name: req.body.name,
@@ -30,6 +30,7 @@ router.post('/create', async(req, res) => {
     }
 })
 
+// Update doc
 router.post('/update', async(req, res) => {
     const filter = { name: req.body.name }
     const content = { $set: { content: req.body.content } }
@@ -39,5 +40,6 @@ router.post('/update', async(req, res) => {
         res.status(201).json("Updated doc successfully!")
     }
 })
+
 
 module.exports = router;
