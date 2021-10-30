@@ -2,8 +2,8 @@ const { Schema, model } = require("mongoose")
 
 const Document = new Schema({
     _id: String,
-    name: String,
-    data: Object
+    data: Object,
+    name: String
 })
 
 module.exports = model("Document", Document)

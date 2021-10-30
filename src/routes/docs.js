@@ -30,16 +30,6 @@ router.post('/create', async(req, res) => {
     }
 })
 
-// Update doc
-router.post('/update', async(req, res) => {
-    const filter = { name: req.body.name }
-    const content = { $set: { content: req.body.content } }
-    const options = { upsert: true }
-    let result = await db.update(filter, content, options)
-    if (result) {
-        res.status(201).json("Updated doc successfully!")
-    }
-})
 
 /* ROUTES END */
 

@@ -85,10 +85,13 @@ io.on("connection", socket => {
         socket.on("send-changes", delta => {
             // Send changes to document room on broadcast
             socket.broadcast.to(docid).emit("receive-changes", delta);
+            console.log("received changes:", delta);
         })
 
-        socket.on("save-document", async data => {
-            await db.update(docid, data)
+        socket.on("save-document", async delta => {
+            console.log("request to save received");
+            const results = await db.update(docid, delta);
+            socket.emit("saved-status", results);
         })
     })
 
@@ -101,6 +104,16 @@ io.on("connection", socket => {
         console.log("received listdocuments", msg)
         const docs = await db.listDocs();
         socket.emit("listed-documents",  docs);
+    })
+
+    socket.on("resetdb", async () => {
+        console.log("received resetdb")
+        const results = await db.reset();
+        if (results) {
+            socket.emit("resetdb");
+        } else {
+            console.log("resetdb error!");
+        }
     })
 })
 
