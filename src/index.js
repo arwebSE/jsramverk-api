@@ -34,7 +34,6 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const db = require("./db/db");
-const docs = require("./routes/docs");
 
 /** Routes **/
 app.get("/", function(_req, res) {
@@ -43,7 +42,6 @@ app.get("/", function(_req, res) {
     });
 });
 
-app.use("/docs", docs);
 
 // ERROR HANDLING
 app.use((_req, _res, next) => {
@@ -75,7 +73,36 @@ bootText = [
 ].join(" ")
 
 // SOCKET SERVER
-app.set('socketio', io); // Set socket.io reference (IMPORTANT!)
+io.on("connection", socket => {
+    console.log("Socket connected ID:", socket.id);
+    socket.on("disconnect", () => { console.log("Disconnected ID:", socket.id); })
+
+    socket.on("get-document", async docid => {
+        const document = await db.create(docid)
+        socket.join(docid) // Join room by docid
+        socket.emit("load-document", document.data);
+
+        socket.on("send-changes", delta => {
+            // Send changes to document room on broadcast
+            socket.broadcast.to(docid).emit("receive-changes", delta);
+        })
+
+        socket.on("save-document", async data => {
+            await db.update(docid, data)
+        })
+    })
+
+    socket.on("create-document", async (docid, name) => {
+        const document = await db.create(docid, name)
+        socket.emit("created-document", document);
+    })
+
+    socket.on("list-documents", async (msg) => {
+        console.log("received listdocuments", msg)
+        const docs = await db.listDocs();
+        socket.emit("listed-documents",  docs);
+    })
+})
 
 // BOOTUP
 server.listen(port, () => {
