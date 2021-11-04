@@ -96,7 +96,7 @@ io.on("connection", socket => {
     socket.on("save-document", async(docid, staticDelta) => {
         console.log("=> saving changes to DB");
         await db.update(docid, staticDelta);
-        socket.emit("saved-status", "db updated.");
+        socket.emit("saved-status", "DB updated successfully.");
     })
 
     socket.on("create-document", async(name) => {
@@ -107,7 +107,7 @@ io.on("connection", socket => {
     socket.on("list-documents", async() => {
         console.log("=> Listing docs...")
         const docs = await db.listDocs();
-        socket.emit("listed-documents", docs);
+        socket.emit("list-documents", docs);
     })
 
     socket.on("resetdb", async() => {
