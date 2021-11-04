@@ -25,12 +25,12 @@ function getDSN() {
  * Reset collection
  */
 async function reset() {
-    Document.remove({}, function(err) {
+    Document.deleteMany({}, function(err) {
         if (err) {
-            console.log("error resetting db:", err);
+            console.log("=> DB: error resetting:", err);
             return;
         } else {
-            console.log('db reset')
+            console.log('=> DB: successfully reset!')
             return true;
         }
     });
@@ -40,27 +40,32 @@ async function reset() {
  * List all existing documents
  */
 async function listDocs() {
-    console.log("listing docs");
     return await Document.find();
 }
 
 /**
- * Create new document or if it exists, return it
+ * Create new document
  */
-async function create(docid, name = "", data={}) {
-    if (docid == null) return
-    const document = await Document.findById(docid)
-    if (document) return document // return existing doc
-    console.log("Creating new doc with ID:", docid, "and name:", name)
-    return await Document.create({ _id: docid, name, data }) // Create empty doc
+async function create(name = "", data={}) {
+    console.log("=> DB: creating doc with name:", name)
+    const doc = await Document.create({ name, data }) // Create empty doc
+    return doc
+}
+
+
+/**
+ * Fetch existing document
+ */
+ async function open(docid) {
+    console.log("=> DB: opening doc by id:", docid);
+    return await Document.findById(docid)
 }
 
 /**
  * Update existing document
  */
 async function update(docid, data) {
-    console.log("in db updating", data);
-    return await Document.findByIdAndUpdate(docid, { data })
+    return await Document.findByIdAndUpdate({ _id: docid }, { data })
 }
 
-module.exports = { reset, listDocs, create, update, getDSN }
+module.exports = { reset, listDocs, create, update, open, getDSN }

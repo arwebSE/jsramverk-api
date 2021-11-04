@@ -73,53 +73,52 @@ bootText = [
 ].join(" ")
 
 // SOCKET SERVER
+
 io.on("connection", socket => {
     console.log("Socket connected ID:", socket.id);
     socket.on("disconnect", () => { console.log("Disconnected ID:", socket.id); })
 
     socket.on("get-document", async docid => {
-        const document = await db.create(docid)
+        const document = await db.open(docid)
         socket.join(docid) // Join room by docid
-        socket.emit("load-document", document.data);
+        console.log("<= sending loaded doc");
+        socket.emit("load-document", document);
 
+        socket.once("send-changes", () => {
+            console.log("<= broadcasting changes");
+        })
         socket.on("send-changes", delta => {
             // Send changes to document room on broadcast
             socket.broadcast.to(docid).emit("receive-changes", delta);
-            console.log("received changes:", delta);
-        })
-
-        socket.on("save-document", async delta => {
-            console.log("request to save received");
-            const results = await db.update(docid, delta);
-            socket.emit("saved-status", results);
         })
     })
 
-    socket.on("create-document", async (docid, name) => {
-        const document = await db.create(docid, name)
+    socket.on("save-document", async(docid, staticDelta) => {
+        console.log("=> saving changes to DB");
+        await db.update(docid, staticDelta);
+        socket.emit("saved-status", "db updated.");
+    })
+
+    socket.on("create-document", async(name) => {
+        const document = await db.create(name)
         socket.emit("created-document", document);
     })
 
-    socket.on("list-documents", async (msg) => {
-        console.log("received listdocuments", msg)
+    socket.on("list-documents", async() => {
+        console.log("=> Listing docs...")
         const docs = await db.listDocs();
-        socket.emit("listed-documents",  docs);
+        socket.emit("listed-documents", docs);
     })
 
-    socket.on("resetdb", async () => {
-        console.log("received resetdb")
-        const results = await db.reset();
-        if (results) {
-            socket.emit("resetdb");
-        } else {
-            console.log("resetdb error!");
-        }
+    socket.on("resetdb", async() => {
+        console.log("=> resetdb requested")
+        await db.reset();
     })
 })
 
 // BOOTUP
 server.listen(port, () => {
-    console.log(`Running API on port ${port}!`);
+    console.log(`=> Running API on port ${port}!`);
     if (process.env.NODE_ENV !== "test") {
         console.log(bootText);
     }
