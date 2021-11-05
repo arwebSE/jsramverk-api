@@ -7,8 +7,7 @@
         "start": "set NODE_ENV=dev& node src/index.js",
         "watch": "set NODE_ENV=dev& nodemon -L --watch src src/index.js",
         "prod": "set NODE_ENV=prod& node src/index.js",
-        "test": "set NODE_ENV=test& nyc --reporter=html --reporter=text mocha 'test/**/*.js'",
-        "socket": "set NODE_ENV=dev& node src/socket.js"
+        "test": "set NODE_ENV=test& nyc --reporter=html --reporter=text mocha 'test/**/*.js'"
     },
     "author": "auro17",
     "license": "ISC",
