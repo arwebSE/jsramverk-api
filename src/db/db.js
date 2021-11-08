@@ -12,7 +12,8 @@ if (process.env.NODE_ENV == "test") { DSN = "mongodb://localhost:27017/test" }
 
 // Mongoose
 mongoose.connect(`${DSN}`)
-const Document = require("./Document")
+const Document = require("./Document");
+const RefreshToken = require("./RefreshToken");
 
 /**
  * Return DSN without password
@@ -46,7 +47,7 @@ async function listDocs() {
 /**
  * Create new document
  */
-async function create(name = "", data={}) {
+async function create(name = "", data = {}) {
     console.log("=> DB: creating doc with name:", name)
     const doc = await Document.create({ name, data }) // Create empty doc
     return doc
@@ -56,7 +57,7 @@ async function create(name = "", data={}) {
 /**
  * Fetch existing document
  */
- async function open(docid) {
+async function open(docid) {
     console.log("=> DB: opening doc by id:", docid);
     return await Document.findById(docid)
 }
@@ -65,7 +66,57 @@ async function create(name = "", data={}) {
  * Update existing document
  */
 async function update(docid, data) {
-    return await Document.findByIdAndUpdate({ _id: docid }, { data })
+    return await Document.findByIdAndUpdate(docid, { data })
 }
 
-module.exports = { reset, listDocs, create, update, open, getDSN }
+/**
+ * List all RefreshTokens
+ */
+async function getRefreshTokens() {
+    return await RefreshToken.find();
+}
+
+/**
+ * Create RefreshToken
+ */
+async function addRefreshToken(token) {
+    console.log("=> DB: Adding RefreshToken:", token)
+
+    let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+    RefreshToken.findOneAndUpdate({ token }, {}, options, function(err) {
+        if (err) console.log("=> Error creating rftoken:", err)
+        else console.log("=> RefreshToken was added!");
+    });
+}
+
+/**
+ * Remove RefreshToken
+ */
+async function delRefreshToken(token) {
+    console.log("=> DB: Removing RefreshToken:", token)
+    RefreshToken.deleteOne({ token }, function(err) {
+        if (err) console.log("=> Error deleting rftoken:", err)
+        else console.log("=> Successfully deleted rftoken.");
+    });
+}
+
+/**
+ * Find RefreshToken, return true or false
+ */
+ async function findRefreshToken(token, callback) {
+    console.log("=> DB: Looking for rftoken:", token)
+    RefreshToken.findOne({ token }, function(err, results) {
+        if (err) {
+            console.log("=> Error deleting rftoken:", err)
+            callback && callback(false);
+        }
+        if (results === null) {            
+            callback && callback(false);
+        } else {            
+            callback && callback(true);
+        }
+    });
+}
+
+
+module.exports = { reset, listDocs, create, update, open, getDSN, getRefreshTokens, addRefreshToken, delRefreshToken, findRefreshToken }

@@ -4,9 +4,9 @@
     "description": "API backend section of jsramverk course",
     "main": "index.js",
     "scripts": {
-        "start": "set NODE_ENV=dev& node src/index.js",
-        "watch": "set NODE_ENV=dev& nodemon -L --watch src src/index.js",
-        "prod": "set NODE_ENV=prod& node src/index.js",
+        "start": "set NODE_ENV=development& node src/index.js",
+        "watch": "set NODE_ENV=development& nodemon -L --watch src src/index.js",
+        "prod": "set NODE_ENV=production& node src/index.js",
         "test": "set NODE_ENV=test& nyc --reporter=html --reporter=text mocha 'test/**/*.js'"
     },
     "author": "auro17",

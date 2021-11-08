@@ -1,0 +1,28 @@
+###
+# 1: GET TOKENS
+POST http://localhost:1337/login
+Content-Type: application/json
+{
+    "username": "mi"
+}
+
+###
+# 2: GET NEW ACCESS TOKEN USING REFRESHTOKEN
+POST http://localhost:1337/token
+Content-Type: application/json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWkiLCJpYXQiOjE2MzYzOTM3MzB9.HwGVPyrgDjWhwkIW6hPMmFBR4AOSTZ-H6zWds13zwmY"
+}
+
+###
+# 3: SEE SECRET CONTENT USING TOKEN
+GET http://localhost:1337/demo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWkiLCJpYXQiOjE2MzYzOTM3MzgsImV4cCI6MTYzNjM5Mzc1M30.PQ3xP5w_ty0MixiRDv7gdCHd1wsR1PVjpjpB00Z8BB0
+
+###
+# 4: DELETE TOKEN / logout
+DELETE http://localhost:1337/logout
+Content-Type: application/json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWkiLCJpYXQiOjE2MzYzODEyOTR9.cgS-Iil0cOw243QnjUtaS4rmoDrCXVPEoGOqw93EeGE"
+}

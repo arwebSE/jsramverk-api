@@ -1,18 +1,18 @@
-require("dotenv").config()
-
+require('dotenv').config();
 const express = require("express");
 const app = require('express')();
 const server = require('http').Server(app);
 const port = process.env.PORT;
 const cors = require("cors");
-const io = require('socket.io')(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
+const io = require('socket.io')(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-app.use(cors());
+const auth = require("./auth"); // Import auth.js module
+require('./socket')(io) // Import socket.js module, providing this io obj.
+
+// SETUP
+app.use(express.json()); // parsing application/json
+app.use(express.urlencoded({ extended: true })); // parsing application/x-www-form-urlencoded
+app.use(cors()); // cors
 
 const morgan = require("morgan");
 const chalk = require("chalk");
@@ -27,6 +27,7 @@ const morganMiddleware = morgan(function(tokens, req, res) {
         chalk.hex("#2ed573").bold(tokens["response-time"](req, res) + " ms"),
     ].join(" ")
 })
+console.log("Launching in env mode:", process.env.NODE_ENV);
 if (process.env.NODE_ENV !== "test") {
     app.use(morganMiddleware)
 } else {
@@ -42,6 +43,26 @@ app.get("/", function(_req, res) {
     });
 });
 
+/**
+ * Return new AccessToken if provided RefreshToken exists in DB.
+ */
+app.post("/token", async(req, res) => {
+    const refreshToken = req.body.token;
+    auth.getAccessToken(refreshToken, res);
+});
+
+app.post("/login", async(req, res) => {
+    auth.login(req.body.username, res);
+});
+
+app.get("/demo", auth.authToken, async(req, res) => {
+    const secrets = [{ username: "mi", data: "testin" }, { username: "admin", data: "testin2" }] // demo content
+    res.json(secrets.filter(secret => secret.username === req.user.name));
+});
+
+app.delete("/logout", async(req, res) => {
+    auth.logout(req.body.token, res);
+})
 
 // ERROR HANDLING
 app.use((_req, _res, next) => {
@@ -60,9 +81,6 @@ app.use((err, _req, res, next) => {
     });
 });
 
-// PARSING SETUP
-app.use(express.json()); // application/json
-app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencoded
 
 // BOOT TEXT
 let date = new Date();
@@ -71,50 +89,6 @@ bootText = [
     chalk.hex("#ff4757").bold("DSN:"),
     chalk.hex("#34ace0").bold(db.getDSN()),
 ].join(" ")
-
-// SOCKET SERVER
-
-io.on("connection", socket => {
-    console.log("Socket connected ID:", socket.id);
-    socket.on("disconnect", () => { console.log("Disconnected ID:", socket.id); })
-
-    socket.on("get-document", async docid => {
-        const document = await db.open(docid)
-        socket.join(docid) // Join room by docid
-        console.log("<= sending loaded doc");
-        socket.emit("load-document", document);
-
-        socket.once("send-changes", () => {
-            console.log("<= broadcasting changes");
-        })
-        socket.on("send-changes", delta => {
-            // Send changes to document room on broadcast
-            socket.broadcast.to(docid).emit("receive-changes", delta);
-        })
-    })
-
-    socket.on("save-document", async(docid, staticDelta) => {
-        console.log("=> saving changes to DB");
-        await db.update(docid, staticDelta);
-        socket.emit("saved-status", "DB updated successfully.");
-    })
-
-    socket.on("create-document", async(name) => {
-        const document = await db.create(name)
-        socket.emit("created-document", document);
-    })
-
-    socket.on("list-documents", async() => {
-        console.log("=> Listing docs...")
-        const docs = await db.listDocs();
-        socket.emit("list-documents", docs);
-    })
-
-    socket.on("resetdb", async() => {
-        console.log("=> resetdb requested")
-        await db.reset();
-    })
-})
 
 // BOOTUP
 server.listen(port, () => {
