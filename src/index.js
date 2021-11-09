@@ -6,6 +6,7 @@ const port = process.env.PORT;
 const cors = require("cors");
 const io = require('socket.io')(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
+const db = require("./db/db"); // Import db.js module
 const auth = require("./auth"); // Import auth.js module
 require('./socket')(io) // Import socket.js module, providing this io obj.
 
@@ -34,9 +35,11 @@ if (process.env.NODE_ENV !== "test") {
     console.log("testing!");
 }
 
-const db = require("./db/db");
+/** ROUTES **/
 
-/** Routes **/
+/**
+ * Index page (to check status of API)
+ */
 app.get("/", function(_req, res) {
     res.json({
         data: { msg: `Index. DSN: ${db.getDSN()}`, status: "online" }
@@ -44,25 +47,52 @@ app.get("/", function(_req, res) {
 });
 
 /**
- * Return new AccessToken if provided RefreshToken exists in DB.
+ * Refresh AccessToken using RefreshToken.
  */
 app.post("/token", async(req, res) => {
     const refreshToken = req.body.token;
     auth.getAccessToken(refreshToken, res);
 });
 
+/**
+ * Login user using username and password.
+ */
 app.post("/login", async(req, res) => {
-    auth.login(req.body.username, res);
+    auth.login(req, res);
 });
 
+/**
+ * Demo locked page unlocked using credentials
+ */
 app.get("/demo", auth.authToken, async(req, res) => {
     const secrets = [{ username: "mi", data: "testin" }, { username: "admin", data: "testin2" }] // demo content
+    console.log("inside demo call");
     res.json(secrets.filter(secret => secret.username === req.user.name));
 });
 
+/**
+ * Logout specified user
+ */
 app.delete("/logout", async(req, res) => {
     auth.logout(req.body.token, res);
 })
+
+/**
+ * Get list of all users
+ */
+app.get("/users", async (_req, res) => {
+    const users = await db.getUsers();
+    res.json(users);
+});
+
+/**
+ * Register user using new username and password
+ */
+app.post("/register", async(req, res) => {
+    auth.register(req, res);
+});
+
+/** ROUTES END **/
 
 // ERROR HANDLING
 app.use((_req, _res, next) => {

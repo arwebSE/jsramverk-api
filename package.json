@@ -16,7 +16,7 @@
         "url": "git+https://github.com/arwebSE/jsramverk-api.git"
     },
     "dependencies": {
-        "bcryptjs": "^2.4.3",
+        "bcrypt": "^5.0.1",
         "chalk": "^4.1.2",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",

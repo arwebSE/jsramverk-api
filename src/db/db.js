@@ -14,6 +14,7 @@ if (process.env.NODE_ENV == "test") { DSN = "mongodb://localhost:27017/test" }
 mongoose.connect(`${DSN}`)
 const Document = require("./Document");
 const RefreshToken = require("./RefreshToken");
+const User = require("./User");
 
 /**
  * Return DSN without password
@@ -103,20 +104,58 @@ async function delRefreshToken(token) {
 /**
  * Find RefreshToken, return true or false
  */
- async function findRefreshToken(token, callback) {
+async function findRefreshToken(token, callback) {
     console.log("=> DB: Looking for rftoken:", token)
     RefreshToken.findOne({ token }, function(err, results) {
         if (err) {
             console.log("=> Error deleting rftoken:", err)
             callback && callback(false);
         }
-        if (results === null) {            
+        if (results === null) {
             callback && callback(false);
-        } else {            
+        } else {
             callback && callback(true);
         }
     });
 }
 
+/**
+ * List all existing users
+ */
+async function getUsers() {
+    return await User.find();
+}
 
-module.exports = { reset, listDocs, create, update, open, getDSN, getRefreshTokens, addRefreshToken, delRefreshToken, findRefreshToken }
+/**
+ * Create new User
+ */
+async function createUser(username, password) {
+    console.log("=> DB: creating User with name:", username)
+    try {
+        await User.create({ username, password })
+        return true;
+    } catch (err) {
+        if (err.name === 'MongoServerError' && err.code === 11000) {
+            console.log(`=> Couldn't create User "${username}" because that username already exists.`);
+            return err.code;
+        } else {
+            console.log("=> Error creating user:", err);
+            return err.code;
+        }
+    }
+}
+
+module.exports = {
+    reset,
+    listDocs,
+    create,
+    update,
+    open,
+    getDSN,
+    getRefreshTokens,
+    addRefreshToken,
+    delRefreshToken,
+    findRefreshToken,
+    getUsers,
+    createUser
+}
