@@ -6,24 +6,6 @@ const bcrypt = require("bcrypt");
 /* HELPER FUNCTIONS */
 
 /**
- * MIDDLEWARE, verifies auth header (accessToken), sets user based on token.
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @returns void
- */
-function authToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.sendStatus(401);
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403); // has token but no longer valid
-        req.user = user
-        next()
-    });
-}
-
-/**
  * Generate AccessToken using RefreshToken,
  * return AccessToken to client.
  */
@@ -33,7 +15,7 @@ function getAccessToken(refreshToken, res) {
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
-        const accessToken = generateAccessToken({ name: user.name });
+        const accessToken = generateAccessToken({ id: user._id, username: user.username });
         res.json({ accessToken })
     });
 }
@@ -43,7 +25,7 @@ function getAccessToken(refreshToken, res) {
  * that expires in 30 seconds.
  */
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
+    return jwt.sign({ id: user._id, username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
 }
 
 /* HELPER FUNCTIONS END */
@@ -51,21 +33,20 @@ function generateAccessToken(user) {
 /* EXPORTED FUNCTIONS */
 
 async function login(req, res) {
-    const user = users.find(user => user.name === req.body.username)
-    if (user === null) {
-        return res.status(400).send("Cannot find user")
-    }
+    const user = await db.findUser(req.body.username);
     try {
-        if (await bcrypt.compare(req.body.password, user.password)) {
+        // If username exists and password correct
+        if (user !== null && await user.comparePassword(req.body.password)) {
             const accessToken = generateAccessToken(user);
-            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+            const refreshToken = jwt.sign({ id: user._id, username: user.username }, process.env.REFRESH_TOKEN_SECRET);
             await db.addRefreshToken(refreshToken);
 
             res.json({ accessToken, refreshToken });
         } else {
-            res.status(403).send("Not allowed")
+            res.status(401).send("Wrong username  or password!")
         }
     } catch (err) {
+        console.log("=> Error logging in:", err);
         res.status(500).send()
     }
 }
@@ -73,7 +54,7 @@ async function login(req, res) {
 async function register(req, res) {
     try {
         const hashedPass = await bcrypt.hash(req.body.password, 10);
-        const results = await db.createUser(req.body.name, hashedPass);
+        const results = await db.createUser(req.body.username, hashedPass);
         if (results === true) {
             res.status(201).send() // If creation successful
         } else {
@@ -91,4 +72,4 @@ async function logout(token, res) {
 
 /* EXPORTED FUNCTIONS END */
 
-module.exports = { login, logout, authToken, getAccessToken, register }
+module.exports = { login, logout, getAccessToken, register }

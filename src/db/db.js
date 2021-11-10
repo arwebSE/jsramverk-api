@@ -48,9 +48,9 @@ async function listDocs() {
 /**
  * Create new document
  */
-async function create(name = "", data = {}) {
+async function create(name, data = {}, users = []) {
     console.log("=> DB: creating doc with name:", name)
-    const doc = await Document.create({ name, data }) // Create empty doc
+    const doc = await Document.create({ name, data, users }) // Create empty doc
     return doc
 }
 
@@ -112,8 +112,10 @@ async function findRefreshToken(token, callback) {
             callback && callback(false);
         }
         if (results === null) {
+            console.log("=> DB: rftoken was not found...")
             callback && callback(false);
         } else {
+            console.log("=> DB: rftoken found!")
             callback && callback(true);
         }
     });
@@ -145,6 +147,21 @@ async function createUser(username, password) {
     }
 }
 
+/**
+ * Create new User
+ */
+async function findUser(username) {
+    console.log("=> DB: finding User with name:", username)
+    try {
+        return await User.findOne({ username })
+    } catch (err) {
+        console.log("=> Error finding user:", err);
+        return err.code;
+    }
+}
+
+
+
 module.exports = {
     reset,
     listDocs,
@@ -157,5 +174,6 @@ module.exports = {
     delRefreshToken,
     findRefreshToken,
     getUsers,
-    createUser
+    createUser,
+    findUser
 }

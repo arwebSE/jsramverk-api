@@ -1,20 +1,20 @@
 ###
-# 2: GET NEW ACCESS TOKEN USING REFRESHTOKEN
+# GET NEW ACCESS TOKEN USING REFRESHTOKEN
 POST http://localhost:1337/token
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWkiLCJpYXQiOjE2MzY0NzE4NTZ9.Rj32wDd7uJzLnwp7fv-gUMC3L42AzD3SmFn8cN6E9dA"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGFiM2Q4YTdmODlhMTgzYjU2ZTJjZCIsInVzZXJuYW1lIjoibWkiLCJpYXQiOjE2MzY1NDQ4MzN9.6-cgGzLxbn4jd6OlwC57uzTwF1bBbE619IdfXjXeKcA"
 }
 
 ###
-# 3: SEE SECRET CONTENT USING TOKEN
+# SEE SECRET CONTENT USING TOKEN
 GET http://localhost:1337/demo
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWkiLCJpYXQiOjE2MzY0NzI1MzIsImV4cCI6MTYzNjQ3MjU2Mn0.OA8CJs3dzyqo4ykTBE7TUXEHVQe4BBUXWUzo3jsJ7JQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGJhZGYyYzkzZDBkMTc5YWYzMzFiZiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2MzY1NDQxMjEsImV4cCI6MTYzNjU0NDE1MX0.w5hRY7bDDWeiNoMpCGN7oSazBRqTFaJD5kovAvVbthI
 
 
 ###
-# 4: DELETE TOKEN / logout
+# DELETE TOKEN / logout
 DELETE http://localhost:1337/logout
 Content-Type: application/json
 
@@ -23,25 +23,25 @@ Content-Type: application/json
 }
 
 ###
-# 5: CREATE USER MI
+# CREATE USER MI
 POST http://localhost:1337/register
 Content-Type: application/json
 
 {
-    "name": "mi",
+    "username": "admin",
     "password": "123"
 }
 
 ###
-# 6: GET USERS LIST
-GET http://localhost:1337/users
+# GET USERS LIST
+// GET http://localhost:1337/users
 
 ###
-# 7: LOGIN USER MI
+# LOGIN USER MI
 POST http://localhost:1337/login
 Content-Type: application/json
 
 {
-    "name": "mi",
+    "username": "mi",
     "password": "123"
 }

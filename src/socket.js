@@ -28,8 +28,8 @@ exports = module.exports = (io) => {
             socket.emit("saved-status", "DB updated successfully.");
         })
 
-        socket.on("create-document", async(name) => {
-            const document = await db.create(name)
+        socket.on("create-document", async(name, data = {}, users = []) => {
+            const document = await db.create(name, data, users)
             socket.emit("created-document", document);
         })
 
