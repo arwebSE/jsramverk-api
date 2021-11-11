@@ -43,7 +43,7 @@ async function login(req, res) {
 
             res.json({ accessToken, refreshToken });
         } else {
-            res.status(401).send("Wrong username  or password!")
+            res.status(401).json("Wrong username or password!")
         }
     } catch (err) {
         console.log("=> Error logging in:", err);
@@ -56,12 +56,12 @@ async function register(req, res) {
         const hashedPass = await bcrypt.hash(req.body.password, 10);
         const results = await db.createUser(req.body.username, hashedPass);
         if (results === true) {
-            res.status(201).send() // If creation successful
+            res.status(201).json(`Successfully registered user: ${req.body.username}`)
         } else {
             throw results;
         }
     } catch (err) {
-        res.status(500).send(`${err}`)
+        res.status(500).json({status: 500, message:"User already exist!", error: err});
     }
 }
 
