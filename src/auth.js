@@ -9,9 +9,14 @@ const bcrypt = require("bcrypt");
  * Generate AccessToken using RefreshToken,
  * return AccessToken to client.
  */
-function getAccessToken(refreshToken, res) {
+async function getAccessToken(refreshToken, res) {
     if (refreshToken == null) return res.sendStatus(401);
-    if (!db.findRefreshToken(refreshToken)) return res.sendStatus(403); // If RefreshToken expired
+
+    const results = await db.findRefreshToken(refreshToken);
+    if (results === null) {
+        return res.sendStatus(403); // If not found (RefreshToken expired)
+    }
+    if (!results) return res.sendStatus(500); // Error searching for rftoken
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
@@ -65,8 +70,11 @@ async function register(req, res) {
     }
 }
 
-async function logout(token, res) {
-    await db.delRefreshToken(token);
+async function logout(req, res) {
+    const results = await db.delRefreshToken(req.body.token);
+    if (results) {
+        console.log("=> Deleted count:", results.deletedCount);
+    }
     res.sendStatus(204);
 }
 

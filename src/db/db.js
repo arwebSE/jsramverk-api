@@ -41,8 +41,8 @@ async function reset() {
 /**
  * List all existing documents
  */
-async function listDocs() {
-    return await Document.find();
+async function listDocs(user) {
+    return await Document.find({ users: user }).exec();
 }
 
 /**
@@ -95,30 +95,25 @@ async function addRefreshToken(token) {
  */
 async function delRefreshToken(token) {
     console.log("=> DB: Removing RefreshToken:", token)
-    RefreshToken.deleteOne({ token }, function(err) {
-        if (err) console.log("=> Error deleting rftoken:", err)
-        else console.log("=> Successfully deleted rftoken.");
-    });
+    try {
+        return await RefreshToken.deleteOne({ token })
+    } catch (err) {
+        console.log("=> Error deleting rftoken:", err);
+        return false;
+    }
 }
 
 /**
  * Find RefreshToken, return true or false
  */
-async function findRefreshToken(token, callback) {
+async function findRefreshToken(token) {
     console.log("=> DB: Looking for rftoken:", token)
-    RefreshToken.findOne({ token }, function(err, results) {
-        if (err) {
-            console.log("=> Error deleting rftoken:", err)
-            callback && callback(false);
-        }
-        if (results === null) {
-            console.log("=> DB: rftoken was not found...")
-            callback && callback(false);
-        } else {
-            console.log("=> DB: rftoken found!")
-            callback && callback(true);
-        }
-    });
+    try {
+        return await RefreshToken.findOne({ token })
+    } catch (err) {
+        console.log("=> Error looking for rftoken:", err);
+        return false;
+    }
 }
 
 /**
@@ -159,8 +154,6 @@ async function findUser(username) {
         return err.code;
     }
 }
-
-
 
 module.exports = {
     reset,

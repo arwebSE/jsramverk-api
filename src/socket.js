@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const db = require("./db/db");
+const mw = require("./middleware");
 
 exports = module.exports = (io) => {
     io.on("connection", socket => {
@@ -33,10 +34,16 @@ exports = module.exports = (io) => {
             socket.emit("created-document", document);
         })
 
-        socket.on("list-documents", async() => {
-            console.log("=> Listing docs...")
-            const docs = await db.listDocs();
-            socket.emit("list-documents", docs);
+        socket.on("list-documents", async(token) => {
+            const user = mw.verifyLogin(token);
+            if (user) {
+                console.log("=> Listing docs...")
+                console.log("wud list for", user);
+                //const docs = await db.listDocs(user);
+                //socket.emit("list-documents", docs);
+            } else {
+                console.log("Login verify failed!");
+            }
         })
 
         socket.on("resetdb", async() => {

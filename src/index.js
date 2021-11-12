@@ -57,7 +57,7 @@ app.get("/demo", mw.authToken, async(req, res) => {
 
 // Logout specified user
 app.delete("/logout", async(req, res) => {
-    auth.logout(req.body.token, res);
+    auth.logout(req, res);
 })
 
 // Get list of all users

@@ -4,7 +4,7 @@ POST http://localhost:1337/token
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGFiM2Q4YTdmODlhMTgzYjU2ZTJjZCIsInVzZXJuYW1lIjoibWkiLCJpYXQiOjE2MzY1NDQ4MzN9.6-cgGzLxbn4jd6OlwC57uzTwF1bBbE619IdfXjXeKcA"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGFiM2Q4YTdmODlhMTgzYjU2ZTJjZCIsInVzZXJuYW1lIjoibWkiLCJpYXQiOjE2MzY3MzkzNDl9.3EUzrq4irSOPjCCHjPxna1AO-E81TPHSfDJACTW4UsM"
 }
 
 ###
@@ -19,7 +19,7 @@ DELETE http://localhost:1337/logout
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWkiLCJpYXQiOjE2MzYzODEyOTR9.cgS-Iil0cOw243QnjUtaS4rmoDrCXVPEoGOqw93EeGE"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGFiM2Q4YTdmODlhMTgzYjU2ZTJjZCIsInVzZXJuYW1lIjoibWkiLCJpYXQiOjE2MzY3Mzk3NzB9.GB1e7oMngxHx6Xmn0MdG-fyCUitGcJsWCdg33RudF4k"
 }
 
 ###
@@ -28,7 +28,7 @@ POST http://localhost:1337/register
 Content-Type: application/json
 
 {
-    "username": "admin",
+    "username": "adminz",
     "password": "123"
 }
 
