@@ -45,3 +45,9 @@ Content-Type: application/json
     "username": "mi",
     "password": "123"
 }
+
+###
+# SEE SECRET DOCS USING TOKEN
+GET http://localhost:1337/docs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGFiM2Q4YTdmODlhMTgzYjU2ZTJjZCIsInVzZXJuYW1lIjoibWkiLCJpYXQiOjE2MzY4MTE1OTYsImV4cCI6MTYzNjgxMTYyNn0.a4XNVHl17FuORDWNVnVwpSlvtwc76YnWQ__L5k70DBI
+
