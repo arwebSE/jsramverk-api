@@ -82,12 +82,6 @@ app.delete("/logout", async(req, res) => {
     auth.logout(req, res);
 })
 
-// Get list of all users
-/* app.get("/users", async (_req, res) => {
-    const users = await db.getUsers();
-    res.json(users);
-}); */
-
 // Register user using new username and password
 app.post("/register", async(req, res) => {
     auth.register(req, res);

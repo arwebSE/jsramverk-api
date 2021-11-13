@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 
 /* HELPER FUNCTIONS */
 
+// Gen secrets: require("crypto").randomBytes(64).toString("hex")
+
 /**
  * Generate AccessToken using RefreshToken,
  * return AccessToken to client.
