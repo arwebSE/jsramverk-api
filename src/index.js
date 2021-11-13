@@ -65,7 +65,7 @@ app.get("/docs", mw.authToken, async(req, res) => {
 // Creates doc for user, after auth
 app.post("/create", mw.authToken, async(req, res) => {
     const username = req.user.username; // gets set by mw.authToken
-    const allowedUsers = req.body.allowedUsers.join('').split(''); // removes weird inputs
+    const allowedUsers = req.body.allowedUsers;
     let users = [username];
     if (allowedUsers) {
         users = users.concat(allowedUsers); // add other users
