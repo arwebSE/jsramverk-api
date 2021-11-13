@@ -1,5 +1,7 @@
 # jsramverk-api
 
+Used together with https://github.com/arwebSE/jsramverk-react
+
 ### Installs project
 ```
 npm install
