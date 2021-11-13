@@ -31,16 +31,4 @@ function authToken(req, res, next) {
     });
 }
 
-/**
- * Verifies accessToken, sets user.
- */
-function verifyLogin(token) {
-    console.log("Verifying token:", token);
-    if (token == null) return false;
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) console.log("Error verify:", err);
-        return user;
-    });
-}
-
-module.exports = { morganMW, authToken, verifyLogin }
+module.exports = { morganMW, authToken }

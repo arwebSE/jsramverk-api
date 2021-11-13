@@ -30,7 +30,9 @@ async function getAccessToken(refreshToken, res) {
  * that expires in 30 seconds.
  */
 function generateAccessToken(user) {
-    return jwt.sign({ id: user._id, username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
+    return jwt.sign({ id: user._id, username: user.username },
+        process.env.ACCESS_TOKEN_SECRET, { expiresIn: '120s' }
+    );
 }
 
 /* HELPER FUNCTIONS END */
@@ -66,7 +68,7 @@ async function register(req, res) {
             throw results;
         }
     } catch (err) {
-        res.status(500).json({status: 500, message:"User already exist!", error: err});
+        res.status(500).json({ status: 500, message: "User already exist!", error: err });
     }
 }
 

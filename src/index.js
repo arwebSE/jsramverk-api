@@ -55,6 +55,28 @@ app.get("/demo", mw.authToken, async(req, res) => {
     res.json(secrets.filter(secret => secret.username === req.user.username)); // req.user added by middleware, ignore warning
 });
 
+// Get docs for user, unlocked using credentials
+app.get("/docs", mw.authToken, async(req, res) => {
+    const username = req.user.username; // gets set by mw.authToken
+    const docs = await db.listDocs(username);
+    res.json(docs); // send docs back
+});
+
+// Creates doc for user, after auth
+app.post("/create", mw.authToken, async(req, res) => {
+    const username = req.user.username; // gets set by mw.authToken
+    const allowedUsers = req.body.allowedUsers.join('').split(''); // removes weird inputs
+    let users = [username];
+    if (allowedUsers) {
+        users = users.concat(allowedUsers); // add other users
+        users = [...new Set(users)]; // remove duplicates
+        console.log("=> Creating doc with extra users:", users);
+    }
+    console.log("=> Creating doc for only user:", users);
+    const document = await db.create(req.body.name, users)
+    res.json(document); // send doc back
+});
+
 // Logout specified user
 app.delete("/logout", async(req, res) => {
     auth.logout(req, res);

@@ -48,12 +48,11 @@ async function listDocs(user) {
 /**
  * Create new document
  */
-async function create(name, data = {}, users = []) {
-    console.log("=> DB: creating doc with name:", name)
-    const doc = await Document.create({ name, data, users }) // Create empty doc
+async function create(name, users = []) {
+    console.log("=> DB: creating doc:", name, "for users:", users)
+    const doc = await Document.create({ name, users }) // Create empty doc
     return doc
 }
-
 
 /**
  * Fetch existing document
