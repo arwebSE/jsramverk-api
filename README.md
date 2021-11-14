@@ -1,6 +1,6 @@
 # jsramverk-api
 
-Used together with https://github.com/arwebSE/jsramverk-react
+React client: https://github.com/arwebSE/jsramverk-react
 
 ### Installs project
 ```
