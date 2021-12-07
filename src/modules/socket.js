@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const db = require("./db/db");
+const db = require("../db/db.js");
 
 exports = module.exports = (io) => {
     io.on("connection", socket => {
