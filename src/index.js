@@ -11,17 +11,19 @@ const io = require("socket.io")(httpServer, {
     cors: { origin: "*", methods: ["GET", "POST"] },
 });
 
-const { ApolloServer, gql } = require("apollo-server-express");
+const { ApolloServer } = require("apollo-server-express");
 const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 
 // Misc dependencies
 const chalk = require("chalk");
 
 // User imports
-const mw = require("./modules/middleware"); // Import middleware
-const db = require("./db/db"); // Import db.js module
-const auth = require("./modules/auth"); // Import auth.js module
-require("./modules/socket")(io); // Import socket.js module, providing this io obj.
+const mw = require("./modules/middleware"); // Middleware functions
+const db = require("./db/db"); // Database
+const auth = require("./modules/auth"); // Handle authentication
+require("./modules/socket")(io); // Handle sockets. io = socket server io.
+const typeDefs = require("./graphql/typeDefs"); // GQL
+const resolvers = require("./graphql/resolvers"); // GQL
 
 // Server setup
 app.use(express.json()); // parsing application/json
@@ -94,48 +96,26 @@ app.use((_req, _res, next) => {
     err.status = 404;
     next(err);
 });
-app.use((err, _req, res, next) => {
+app.use((err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
     }
+    if (req.url == "/graphql") {
+        return next(); // Ignore graphql endpoint
+    }
     res.status(err.status || 500).json({
         errors: [
-            {
-                status: err.status,
-                title: err.message,
-                detail: err.message,
-            },
+            { status: err.status, title: err.message, detail: err.message },
         ],
     });
 });
 
 // BOOTUP
-
-/* await apollo.start();
-apollo.applyMiddleware({ app });
-await new Promise((resolve, port) => {
-    console.log(`=> API now running on port ${port}!`);
-    if (!testing) console.log(bootText);
-    server.listen({ port }, resolve);
-}); */
-
-const typeDefs = gql`
-    type Query {
-        hello: String!
-    }
-`;
-
-const resolvers = {
-    Query: {
-        hello: () => "hello"
-    }
-}
-
-async function startApolloServer(typeDefs, resolvers) {
+async function startServer(typeDefs, resolvers) {
     // BOOT TEXT
     let date = new Date();
     let bootText = [
-        chalk.hex("#f78fb3").bold(`🌀 [${date.toISOString().slice(0, -5)}]`),
+        chalk.hex("#f78fb3").bold(`🌠 [${date.toISOString().slice(0, -5)}]`),
         chalk.hex("#ff4757").bold("DSN:"),
         chalk.hex("#34ace0").bold(db.getDSN()),
     ].join(" ");
@@ -148,6 +128,9 @@ async function startApolloServer(typeDefs, resolvers) {
 
     await server.start();
     server.applyMiddleware({ app });
+
+    await db.connect();
+        
     await new Promise((resolve) => httpServer.listen({ port }, resolve));
     console.log(
         `🚀 API launched at http://localhost:${port}${server.graphqlPath}`
@@ -155,4 +138,4 @@ async function startApolloServer(typeDefs, resolvers) {
     if (!testing) console.log(bootText);
 }
 
-startApolloServer(typeDefs, resolvers);
+startServer(typeDefs, resolvers);

@@ -5,9 +5,12 @@ const jwt = require("jsonwebtoken");
 /**
  * Creates boot text using chalk & morgan
  */
-const morganMW = morgan(function(tokens, req, res) {
+const morganMW = morgan(function (tokens, req, res) {
+    if (tokens.url(req, res) == "/graphql") {
+        return; // ignore graphql calls
+    }
     return [
-        chalk.hex("#ff4757").bold("🎃"),
+        chalk.hex("#ff4757").bold("🌌"),
         chalk.hex("#f78fb3").bold(`[${tokens.date(req, res, "iso").slice(0, -5)}]`),
         chalk.hex("#34ace0").bold(tokens.method(req, res)),
         chalk.hex("#ffb142").bold(tokens.status(req, res)),

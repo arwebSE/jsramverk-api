@@ -11,7 +11,6 @@ const maskedDSN = `mongodb+srv://${DB_USER}:<PASSWD>@${DB_HOST}/${DB_NAME}`;
 if (process.env.NODE_ENV == "test") { DSN = "mongodb://localhost:27017/test" }
 
 // Mongoose
-mongoose.connect(`${DSN}`)
 const Document = require("./Document");
 const RefreshToken = require("./RefreshToken");
 const User = require("./User");
@@ -21,6 +20,13 @@ const User = require("./User");
  */
 function getDSN() {
     return maskedDSN
+}
+
+/**
+ * Reset collection
+ */
+async function connect() {
+    return await mongoose.connect(`${DSN}`);
 }
 
 /**
@@ -155,6 +161,7 @@ async function findUser(username) {
 }
 
 module.exports = {
+    connect,
     reset,
     listDocs,
     create,
