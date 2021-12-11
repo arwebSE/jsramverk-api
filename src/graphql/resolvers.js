@@ -3,13 +3,17 @@ const RefreshToken = require("../db/RefreshToken");
 
 module.exports = {
     Query: {
-        resetDocs: async () => await Document.deleteMany({}),
+        resetDocs: async () => {
+            console.log("=> DB: resetting DB!");
+            return await Document.deleteMany({});
+        },
         getRefreshTokens: async () => await RefreshToken.find(),
         documents: async (_, { user }) => {
             console.log("=> DB: listing all docs belonging to:", user);
             return await Document.find({ users: user }).exec();
         },
         openDoc: async (_, { docid }) => {
+            console.log("=> DB: opening doc:", docid);
             return await Document.findById(docid);
         }
     },

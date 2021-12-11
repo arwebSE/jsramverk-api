@@ -5,7 +5,7 @@ module.exports = gql`
         resetDocs: DeleteResponse!
         getRefreshTokens: [RefreshToken!]!
         documents(user: String!): [Document!]!
-        openDoc(docid: ID!): Document!
+        openDoc(docid: ID!): Document
     }
 
     type DeleteResponse {
