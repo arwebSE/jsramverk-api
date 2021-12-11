@@ -28,7 +28,7 @@ const resolvers = require("./graphql/resolvers"); // GQL
 // Server setup
 app.use(express.json()); // parsing application/json
 app.use(express.urlencoded({ extended: true })); // parsing application/x-www-form-urlencoded
-app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true })); // cors
+app.use(cors({ origin: "*", methods: ["GET", "POST", "DELETE"], credentials: true })); // cors
 
 // Env mode check
 console.log("Launching API in env mode:", process.env.NODE_ENV);
@@ -87,6 +87,11 @@ app.delete("/logout", async (req, res) => {
 app.post("/register", async (req, res) => {
     auth.register(req, res);
 });
+
+// Ping route for uptimerobot
+app.all("/ping", (req, res) => {
+    res.send("API is running!")
+})
 
 /** ROUTES END **/
 
