@@ -6,9 +6,7 @@ const jwt = require("jsonwebtoken");
  * Creates boot text using chalk & morgan
  */
 const morganMW = morgan(function (tokens, req, res) {
-    if (tokens.url(req, res) == "/graphql") {
-        return; // ignore graphql calls
-    }
+    if (tokens.url(req, res) == "/graphql") return; // ignore gql endpoint
     return [
         chalk.hex("#ff4757").bold("🌌"),
         chalk.hex("#f78fb3").bold(`[${tokens.date(req, res, "iso").slice(0, -5)}]`),

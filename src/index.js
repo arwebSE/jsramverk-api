@@ -8,7 +8,7 @@ const httpServer = require("http").Server(app);
 const port = process.env.PORT;
 const cors = require("cors");
 const io = require("socket.io")(httpServer, {
-    cors: { origin: "*", methods: ["GET", "POST"] },
+    cors: { origin: "*", methods: ["GET", "POST"], credentials: true },
 });
 
 const { ApolloServer } = require("apollo-server-express");
@@ -28,7 +28,7 @@ const resolvers = require("./graphql/resolvers"); // GQL
 // Server setup
 app.use(express.json()); // parsing application/json
 app.use(express.urlencoded({ extended: true })); // parsing application/x-www-form-urlencoded
-app.use(cors()); // cors
+app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true })); // cors
 
 // Env mode check
 console.log("Launching API in env mode:", process.env.NODE_ENV);
@@ -97,16 +97,10 @@ app.use((_req, _res, next) => {
     next(err);
 });
 app.use((err, req, res, next) => {
-    if (res.headersSent) {
-        return next(err);
-    }
-    if (req.url == "/graphql") {
-        return next(); // Ignore graphql endpoint
-    }
+    if (res.headersSent) return next(err);
+    if (req.url == "/graphql") return next(); // ignore gql endpoint
     res.status(err.status || 500).json({
-        errors: [
-            { status: err.status, title: err.message, detail: err.message },
-        ],
+        errors: [{ status: err.status, title: err.message, detail: err.message }],
     });
 });
 
@@ -130,11 +124,9 @@ async function startServer(typeDefs, resolvers) {
     server.applyMiddleware({ app });
 
     await db.connect();
-        
+
     await new Promise((resolve) => httpServer.listen({ port }, resolve));
-    console.log(
-        `🚀 API launched at http://localhost:${port}${server.graphqlPath}`
-    );
+    console.log(`🚀 API launched at http://localhost:${port}${server.graphqlPath}`);
     if (!testing) console.log(bootText);
 }
 

@@ -23,56 +23,11 @@ function getDSN() {
 }
 
 /**
- * Reset collection
+ * Connect to mongoDB
  */
 async function connect() {
+    console.log("=> Connecting to mongoDB");
     return await mongoose.connect(`${DSN}`);
-}
-
-/**
- * Reset collection
- */
-async function reset() {
-    Document.deleteMany({}, function(err) {
-        if (err) {
-            console.log("=> DB: error resetting:", err);
-            return;
-        } else {
-            console.log('=> DB: successfully reset!')
-            return true;
-        }
-    });
-}
-
-/**
- * List all existing documents
- */
-async function listDocs(user) {
-    return await Document.find({ users: user }).exec();
-}
-
-/**
- * Create new document
- */
-async function create(name, users = []) {
-    console.log("=> DB: creating doc:", name, "for users:", users)
-    const doc = await Document.create({ name, users }) // Create empty doc
-    return doc
-}
-
-/**
- * Fetch existing document
- */
-async function open(docid) {
-    console.log("=> DB: opening doc by id:", docid);
-    return await Document.findById(docid)
-}
-
-/**
- * Update existing document
- */
-async function update(docid, data) {
-    return await Document.findByIdAndUpdate(docid, { data })
 }
 
 /**
@@ -162,11 +117,6 @@ async function findUser(username) {
 
 module.exports = {
     connect,
-    reset,
-    listDocs,
-    create,
-    update,
-    open,
     getDSN,
     getRefreshTokens,
     addRefreshToken,

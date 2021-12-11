@@ -2,16 +2,29 @@ const { gql } = require("apollo-server-express");
 
 module.exports = gql`
     type Query {
-        hello: String!
-        cats: [Cat!]!
+        resetDocs: DeleteResponse!
+        getRefreshTokens: [RefreshToken!]!
+        documents(user: String!): [Document!]!
+        openDoc(docid: ID!): Document!
     }
 
-    type Cat {
-        id: ID!
+    type DeleteResponse {
+        deletedCount: Int
+    }
+
+    type Document {
+        _id: ID!
         name: String!
+        data: String
+        users: [String]
+    }
+
+    type RefreshToken {
+        token: String!
     }
 
     type Mutation {
-        createCat(name: String!): Cat!
+        createDoc(name: String!, users: [String]): Document!
+        updateDoc(docid: ID!, data: String!): Document!
     }
 `;
