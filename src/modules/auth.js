@@ -2,6 +2,7 @@ require("dotenv").config()
 const jwt = require("jsonwebtoken");
 const db = require("../db/db");
 const bcrypt = require("bcrypt");
+const ACCESS_TOKEN_LIFESPAN = 300; // 5 min
 
 /* HELPER FUNCTIONS */
 
@@ -29,11 +30,11 @@ async function getAccessToken(refreshToken, res) {
 
 /**
  * Returns an AccessToken for given user,
- * that expires in 30 seconds.
+ * that expires in constant "ACCESS_TOKEN_LIFESPAN" seconds.
  */
 function generateAccessToken(user) {
     return jwt.sign({ id: user._id, username: user.username },
-        process.env.ACCESS_TOKEN_SECRET, { expiresIn: '120s' }
+        process.env.ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_LIFESPAN }
     );
 }
 

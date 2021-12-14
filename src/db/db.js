@@ -1,6 +1,5 @@
 require("dotenv").config()
 
-const chalk = require("chalk");
 const mongoose = require("mongoose")
 const DB_HOST = process.env.DB_HOST
 const DB_NAME = process.env.DB_NAME
