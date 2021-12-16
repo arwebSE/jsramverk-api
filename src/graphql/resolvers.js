@@ -23,9 +23,9 @@ module.exports = {
             const doc = await Document.create({ name, users }) // Create empty doc
             return doc;
         },
-        updateDoc: async (_, { docid, data }) => {
+        updateDoc: async (_, { docid, data, comments=[] }) => {
             console.log("=> DB: updating document:", docid);
-            return await Document.findByIdAndUpdate(docid, { data }, { new: true });
+            return await Document.findByIdAndUpdate(docid, { data, comments }, { new: true });
         },
     },
 };

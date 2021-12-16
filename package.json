@@ -16,6 +16,7 @@
         "url": "git+https://github.com/arwebSE/jsramverk-api.git"
     },
     "dependencies": {
+        "@sendgrid/mail": "^7.6.0",
         "apollo-server-core": "^3.5.0",
         "apollo-server-express": "^3.5.0",
         "bcrypt": "^5.0.1",

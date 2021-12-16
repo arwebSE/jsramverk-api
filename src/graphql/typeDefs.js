@@ -17,6 +17,7 @@ module.exports = gql`
         name: String!
         data: String
         users: [String]
+        comments: [String]
     }
 
     type RefreshToken {
@@ -25,6 +26,6 @@ module.exports = gql`
 
     type Mutation {
         createDoc(name: String!, users: [String]): Document!
-        updateDoc(docid: ID!, data: String!): Document!
+        updateDoc(docid: ID!, data: String! comments: [String]): Document!
     }
 `;

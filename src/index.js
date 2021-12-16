@@ -24,6 +24,7 @@ const auth = require("./modules/auth"); // Handle authentication
 require("./modules/socket")(io); // Handle sockets. io = socket server io.
 const typeDefs = require("./graphql/typeDefs"); // GQL
 const resolvers = require("./graphql/resolvers"); // GQL
+const email = require("./modules/email"); // SendGrid (email)
 
 // Server setup
 app.use(express.json()); // parsing application/json
@@ -89,9 +90,14 @@ app.post("/register", async (req, res) => {
 });
 
 // Ping route for uptimerobot
-app.all("/ping", (req, res) => {
+app.all("/ping", (_req, res) => {
     res.send("API is running!")
 })
+
+// Accept invite via link
+app.get("/accept/:id", async (req, res) => {
+    auth.login(req, res);
+});
 
 /** ROUTES END **/
 
