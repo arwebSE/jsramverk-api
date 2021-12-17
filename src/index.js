@@ -91,12 +91,19 @@ app.post("/register", async (req, res) => {
 
 // Ping route for uptimerobot
 app.all("/ping", (_req, res) => {
-    res.send("API is running!")
-})
+    res.send("API is running!");
+});
 
 // Accept invite via link
-app.get("/accept/:id", async (req, res) => {
-    auth.login(req, res);
+app.get("/accept/:docid/:user", function (req, res) {
+    let data = {
+        accept: {
+            docid: req.params.docid,
+            user: req.params.user,
+        },
+    };
+    /* email.send(req, res); */
+    console.log("data:", data);
 });
 
 /** ROUTES END **/

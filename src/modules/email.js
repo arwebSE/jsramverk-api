@@ -8,7 +8,20 @@ const msg = {
     text: "and easy to do anywhere, even with Node.js",
     html: "<strong>and easy to do anywhere, even with Node.js</strong>",
 };
-/* (async () => {
+
+/* const msg = {
+    to: "aggesoft@gmail.com",
+    from: "AuroDocs <contact@arweb.dev>",
+    subject: 'Hello world',
+    text: 'Hello plain world!',
+    html: '<p>Hello HTML world!</p>',
+    templateId: process.env.SENDGRID_EMAIL_ID,
+    dynamic_template_data: {
+        invite: 'https://arweb.dev',
+    },
+}; */
+
+let send = async (req, res) => {
     try {
         await sgMail.send(msg);
     } catch (error) {
@@ -17,5 +30,7 @@ const msg = {
         if (error.response) {
             console.error(error.response.body);
         }
-    }
-})(); */
+    }    
+}
+
+module.exports = { send }
