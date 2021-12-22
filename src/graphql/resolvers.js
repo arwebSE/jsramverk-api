@@ -15,17 +15,28 @@ module.exports = {
         openDoc: async (_, { docid }) => {
             console.log("=> DB: opening doc:", docid);
             return await Document.findById(docid);
-        }
+        },
     },
     Mutation: {
         createDoc: async (_, { name, users = [] }) => {
             console.log("=> DB: creating doc:", name, "for users:", users);
-            const doc = await Document.create({ name, users }) // Create empty doc
+            const doc = await Document.create({ name, users }); // Create empty doc
             return doc;
         },
-        updateDoc: async (_, { docid, data, comments=[] }) => {
+        updateDoc: async (_, { docid, data, comments = [] }) => {
             console.log("=> DB: updating document:", docid);
             return await Document.findByIdAndUpdate(docid, { data, comments }, { new: true });
+        },
+        deleteDoc: async (_, { docid }) => {
+            console.log("=> DB: deleting document:", docid);
+            try {
+                const results = await Document.findByIdAndDelete(docid);
+                if (!results) console.log("Couldn't find doc to delete!");
+                return true;
+            } catch (e) {
+                console.log("Error deleting:", err);
+                return false;
+            }
         },
     },
 };

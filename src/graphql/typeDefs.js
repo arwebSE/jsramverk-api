@@ -27,5 +27,6 @@ module.exports = gql`
     type Mutation {
         createDoc(name: String!, users: [String]): Document!
         updateDoc(docid: ID!, data: String! comments: [String]): Document!
+        deleteDoc(docid: ID!): Boolean
     }
 `;

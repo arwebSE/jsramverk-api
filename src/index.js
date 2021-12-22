@@ -7,10 +7,6 @@ const app = require("express")();
 const httpServer = require("http").Server(app);
 const port = process.env.PORT;
 const cors = require("cors");
-const io = require("socket.io")(httpServer, {
-    cors: { origin: "*", methods: ["GET", "POST"], credentials: true },
-});
-
 const { ApolloServer } = require("apollo-server-express");
 const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 
@@ -21,7 +17,6 @@ const chalk = require("chalk");
 const mw = require("./modules/middleware"); // Middleware functions
 const db = require("./db/db"); // Database
 const auth = require("./modules/auth"); // Handle authentication
-require("./modules/socket")(io); // Handle sockets. io = socket server io.
 const typeDefs = require("./graphql/typeDefs"); // GQL
 const resolvers = require("./graphql/resolvers"); // GQL
 const email = require("./modules/email"); // SendGrid (email)
@@ -29,7 +24,14 @@ const email = require("./modules/email"); // SendGrid (email)
 // Server setup
 app.use(express.json()); // parsing application/json
 app.use(express.urlencoded({ extended: true })); // parsing application/x-www-form-urlencoded
-app.use(cors({ origin: "*", methods: ["GET", "POST", "DELETE"], credentials: true })); // cors
+let corsOptions = {
+    origin: ["https://studio.apollographql.com", "www.student.bth.se", "http://127.0.0.1:3000", "http://localhost:3000"],
+    methods: ["GET", "POST", "DELETE"],
+    credentials: true,
+};
+app.use(cors(corsOptions)); // cors
+const io = require("socket.io")(httpServer, { cors: corsOptions });
+require("./modules/socket")(io); // Handle sockets. io = socket server io.
 
 // Env mode check
 console.log("Launching API in env mode:", process.env.NODE_ENV);
@@ -94,23 +96,32 @@ app.all("/ping", (_req, res) => {
     res.send("API is running!");
 });
 
-// Accept invite via link
-app.get("/accept/:docid/:user", function (req, res) {
+// Create invite to document
+app.get("/invite", async (req, res) => {
     let data = {
-        accept: {
-            docid: req.params.docid,
-            user: req.params.user,
-        },
+        docid: req.query.docid,
+        user: req.query.user,
+        email: req.query.email,
     };
-    /* email.send(req, res); */
-    console.log("data:", data);
+    console.log("Recieved invite!", data.docid, data.user, data.email);
+    try {
+        await email.send(req, res, data);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500).send(error);
+    }
+});
+
+// Accept invite via link
+app.get("/accept", async (req, res) => {
+    await db.addDocumentEditor(req, res);
 });
 
 /** ROUTES END **/
 
 // ERROR HANDLING
 app.use((_req, _res, next) => {
-    var err = new Error("Not Found");
+    let err = new Error("Not Found");
     err.status = 404;
     next(err);
 });

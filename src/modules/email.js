@@ -1,13 +1,6 @@
 require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const msg = {
-    to: "aggesoft@gmail.com",
-    from: "AuroDocs <contact@arweb.dev>",
-    subject: "Sending with SendGrid is Fun",
-    text: "and easy to do anywhere, even with Node.js",
-    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-};
 
 /* const msg = {
     to: "aggesoft@gmail.com",
@@ -21,16 +14,27 @@ const msg = {
     },
 }; */
 
-let send = async (req, res) => {
+let send = async (req, _res, data) => {
+    let host = req.protocol + "://" + req.get("host");
+
+    const message = {
+        to: data.email,
+        from: "AuroDocs <contact@arweb.dev>",
+        subject: "Document Edit Invite - AuroDocs",
+        text: `Invite link: ${host}/accept?docid=${data.docid}&user=${data.user}`,
+        html: `Invite link: <a href="${host}/accept?docid=${data.docid}&user=${data.user}">Accept Invite</a>`,
+    };
+
     try {
-        await sgMail.send(msg);
+        await sgMail.send(message);
+        console.log(`=> Sent invite to: ${data.email}! 💌`);
     } catch (error) {
         console.error(error);
 
         if (error.response) {
             console.error(error.response.body);
         }
-    }    
-}
+    }
+};
 
-module.exports = { send }
+module.exports = { send };
