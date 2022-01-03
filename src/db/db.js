@@ -137,7 +137,11 @@ async function addDocumentEditor(req, res) {
                 res.sendStatus(500);
             } else {
                 console.log("=> Editor was added!");
-                res.sendStatus(200);
+                res.send(`
+                    Successfully accepted invite!<br>
+                    You can now go to AuroDocs™ to edit the document.<br>
+                    Link: <a href='http://www.student.bth.se/~auro17/editor/'>http://www.student.bth.se/~auro17/editor/</a>
+                `);
                 return true;
             }
             return;

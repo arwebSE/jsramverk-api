@@ -4,7 +4,8 @@ const DocumentSchema = new Schema({
     name: { type: String, required: true },
     data: String,
     users: [String],
-    comments: [String]
+    comments: [String],
+    type: String
 })
 
 module.exports = model("Document", DocumentSchema)

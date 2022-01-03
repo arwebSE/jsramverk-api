@@ -18,14 +18,14 @@ module.exports = {
         },
     },
     Mutation: {
-        createDoc: async (_, { name, users = [] }) => {
+        createDoc: async (_, { name, users = [], type = "text" }) => {
             console.log("=> DB: creating doc:", name, "for users:", users);
-            const doc = await Document.create({ name, users }); // Create empty doc
+            const doc = await Document.create({ name, users, type }); // Create empty doc
             return doc;
         },
-        updateDoc: async (_, { docid, data, comments = [] }) => {
+        updateDoc: async (_, { docid, data, comments = [], type = "text" }) => {
             console.log("=> DB: updating document:", docid);
-            return await Document.findByIdAndUpdate(docid, { data, comments }, { new: true });
+            return await Document.findByIdAndUpdate(docid, { data, comments, type }, { new: true });
         },
         deleteDoc: async (_, { docid }) => {
             console.log("=> DB: deleting document:", docid);

@@ -25,7 +25,12 @@ const email = require("./modules/email"); // SendGrid (email)
 app.use(express.json()); // parsing application/json
 app.use(express.urlencoded({ extended: true })); // parsing application/x-www-form-urlencoded
 let corsOptions = {
-    origin: ["https://studio.apollographql.com", "www.student.bth.se", "http://127.0.0.1:3000", "http://localhost:3000"],
+    origin: [
+        "https://studio.apollographql.com",
+        "www.student.bth.se",
+        "http://127.0.0.1:3000",
+        "http://localhost:3000",
+    ],
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
 };
@@ -57,28 +62,6 @@ app.post("/token", async (req, res) => {
 // Login user using username and password.
 app.post("/login", async (req, res) => {
     auth.login(req, res);
-});
-
-// Get docs for user, unlocked using credentials
-app.get("/docs", mw.authToken, async (req, res) => {
-    const username = req.user.username; // gets set by mw.authToken
-    const docs = await db.listDocs(username);
-    res.json(docs); // send docs back
-});
-
-// Creates doc for user, after auth
-app.post("/create", mw.authToken, async (req, res) => {
-    const username = req.user.username; // gets set by mw.authToken
-    const allowedUsers = req.body.allowedUsers;
-    let users = [username];
-    if (allowedUsers) {
-        users = users.concat(allowedUsers); // add other users
-        users = [...new Set(users)]; // remove duplicates
-        console.log("=> Creating doc with extra users:", users);
-    }
-    console.log("=> Creating doc for only user:", users);
-    const document = await db.create(req.body.name, users);
-    res.json(document); // send doc back
 });
 
 // Logout specified user
