@@ -28,6 +28,7 @@ let corsOptions = {
     origin: [
         "https://studio.apollographql.com",
         "www.student.bth.se",
+        "http://www.student.bth.se",
         "http://127.0.0.1:3000",
         "http://localhost:3000",
     ],
