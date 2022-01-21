@@ -118,7 +118,7 @@ app.use((err, req, res, next) => {
 });
 
 // BOOTUP
-async function startServer(typeDefs, resolvers) {
+app.listen(async () => {
     // BOOT TEXT
     let date = new Date();
     let bootText = [
@@ -138,9 +138,11 @@ async function startServer(typeDefs, resolvers) {
 
     await db.connect();
 
-    await new Promise((resolve) => httpServer.listen({ port }, resolve));
-    console.log(`🚀 API launched at http://localhost:${port}${server.graphqlPath}`);
+    const Bootup = new Promise((resolve) => httpServer.listen({ port }, resolve));
+    await Bootup.then(console.log(`🚀 API launched at http://localhost:${port}${server.graphqlPath}`))
+        .then(app.emit("booted"))
+        .catch((err) => console.log("Error booting up!"));
     if (!testing) console.log(bootText);
-}
+});
 
-startServer(typeDefs, resolvers);
+module.exports = app;

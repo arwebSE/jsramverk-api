@@ -5,7 +5,17 @@ const DocumentSchema = new Schema({
     data: String,
     users: [String],
     comments: [String],
-    type: String
-})
+    type: String,
+    createdAt: { type: Date, default: Date.now },
+});
 
-module.exports = model("Document", DocumentSchema)
+// Sets the createdAt parameter equal to the current time
+DocumentSchema.pre("save", (next) => {
+    now = new Date();
+    if (!this.createdAt) {
+        this.createdAt = now;
+    }
+    next();
+});
+
+module.exports = model("Document", DocumentSchema);
