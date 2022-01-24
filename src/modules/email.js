@@ -322,14 +322,16 @@ body {font-family: 'Chivo', sans-serif;}
   </html>`,
     };
     try {
-        await sgMail.send(message);
+        if (typeof data.email === "undefined") throw "Email is undefined!";
+        if (typeof data.docid === "undefined") throw "Docid is undefined!";
+        if (typeof data.user === "undefined") throw "User is undefined!";
+        
+        if (process.env.NODE_ENV !== "test") await sgMail.send(message);
         console.log(`=> Sent invite to: ${data.email}! 💌`);
     } catch (error) {
-        console.error(error);
-
-        if (error.response) {
-            console.error(error.response.body);
-        }
+        console.error("Error sending email:", error);
+        if (error.response) console.error(error.response.body);
+        throw error;
     }
 };
 

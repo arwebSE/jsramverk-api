@@ -41,9 +41,7 @@ require("./modules/socket")(io); // Handle sockets. io = socket server io.
 
 // Env mode check
 console.log("Launching API in env mode:", process.env.NODE_ENV);
-let testing = false;
-if (process.env.NODE_ENV == "test") testing = true;
-if (!testing) app.use(mw.morganMW);
+if (process.env.NODE_ENV !== "test") app.use(mw.morganMW);
 
 /** ROUTES **/
 
@@ -118,6 +116,12 @@ app.use((err, req, res, next) => {
 });
 
 // BOOTUP
+const apollo = new ApolloServer({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+});
+
 app.listen(async () => {
     // BOOT TEXT
     let date = new Date();
@@ -127,22 +131,17 @@ app.listen(async () => {
         chalk.hex("#34ace0").bold(db.getDSN()),
     ].join(" ");
 
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    });
-
-    await server.start();
-    server.applyMiddleware({ app });
+    await apollo.start();
+    apollo.applyMiddleware({ app });
 
     await db.connect();
 
-    const Bootup = new Promise((resolve) => httpServer.listen({ port }, resolve));
-    await Bootup.then(console.log(`🚀 API launched at http://localhost:${port}${server.graphqlPath}`))
+    const bootup = new Promise((resolve) => httpServer.listen({ port }, resolve));
+    await bootup
+        .then(console.log(`🚀 API launched at http://localhost:${port}${apollo.graphqlPath}`))
         .then(app.emit("booted"))
-        .catch((err) => console.log("Error booting up!"));
-    if (!testing) console.log(bootText);
+        .catch((err) => console.log("Error booting up!", err));
+    console.log(bootText);
 });
 
-module.exports = app;
+module.exports = { app, httpServer, apollo };

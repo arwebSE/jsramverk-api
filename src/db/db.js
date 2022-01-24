@@ -6,15 +6,18 @@ const DB_NAME = process.env.DB_NAME;
 const DB_USER = process.env.DB_USER;
 const DB_PASS = process.env.DB_PASS;
 let DSN = `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
-const maskedDSN = `mongodb+srv://${DB_USER}:<PASSWD>@${DB_HOST}/${DB_NAME}`;
-if (process.env.NODE_ENV == "test") {
-    DSN = "mongodb://localhost/test";
+let maskedDSN = `mongodb+srv://${DB_USER}:<PASSWD>@${DB_HOST}/${DB_NAME}`;
+if (process.env.NODE_ENV === "test") {
+    DSN, (maskedDSN = "mongodb://localhost/test");
 }
 
 // Mongoose
 const RefreshToken = require("./RefreshToken");
 const User = require("./User");
 const Document = require("./Document");
+
+// Mongoose ref
+let mongo;
 
 /**
  * Return DSN without password
@@ -23,19 +26,23 @@ function getDSN() {
     return maskedDSN;
 }
 
+function getMongo() {
+    return mongo;
+}
+
 /**
  * Connect to mongoDB
  */
 async function connect() {
     console.log("📡 Connecting to mongoDB...");
-    return await mongoose.connect(DSN).then(
-        () => {
+    return mongoose
+        .connect(DSN)
+        .then((dbConnection) => {
+            mongo = dbConnection;
             console.log("✅ Successfully connected to mongoDB!");
-        },
-        (err) => {
-            console.log("❌ Error connecting to mongoDB:", err);
-        }
-    );
+            return dbConnection;
+        })
+        .catch((err) => console.log("❌ Error connecting to mongoDB:", err));
 }
 
 /**
@@ -131,21 +138,26 @@ async function addDocumentEditor(req, res) {
     const user = req.query.user;
     console.log("=> DB: Adding editor", user, "to document:", docid);
     if (docid != undefined && user != undefined) {
-        Document.findByIdAndUpdate(docid, { $addToSet: { users: [user] } }, { new: true }, function (err) {
-            if (err) {
-                console.log("=> Error adding editor:", err);
-                res.sendStatus(500);
-            } else {
-                console.log("=> Editor was added!");
-                res.send(`
+        if (process.env.NODE_ENV === "test") {
+            res.sendStatus(200);
+            return true;
+        } else {
+            Document.findByIdAndUpdate(docid, { $addToSet: { users: [user] } }, { new: true }, function (err) {
+                if (err) {
+                    console.log("=> Error adding editor:", err);
+                    res.sendStatus(500);
+                } else {
+                    console.log("=> Editor was added!");
+                    res.sendStatus(200).send(`
                     Successfully accepted invite!<br>
                     You can now go to AuroDocs™ to edit the document.<br>
                     Link: <a href='http://www.student.bth.se/~auro17/editor/'>http://www.student.bth.se/~auro17/editor/</a>
                 `);
-                return true;
-            }
-            return;
-        });
+                    return true;
+                }
+                return;
+            });
+        }
     } else {
         res.sendStatus(500);
     }
@@ -162,4 +174,5 @@ module.exports = {
     createUser,
     findUser,
     addDocumentEditor,
+    getMongo,
 };
