@@ -1,4 +1,4 @@
-# jsramverk-api
+# jsramverk-api [![Build Status](https://app.travis-ci.com/arwebSE/jsramverk-api.svg?branch=master)](https://app.travis-ci.com/arwebSE/jsramverk-api)
 
 React client: https://github.com/arwebSE/jsramverk-react
 
