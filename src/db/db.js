@@ -8,7 +8,7 @@ const DB_PASS = process.env.DB_PASS;
 let DSN = `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 let maskedDSN = `mongodb+srv://${DB_USER}:<PASSWD>@${DB_HOST}/${DB_NAME}`;
 if (process.env.NODE_ENV === "test") {
-    DSN, (maskedDSN = "mongodb://localhost/test");
+    DSN, (maskedDSN = "mongodb://127.0.0.1/test");
 }
 
 // Mongoose
