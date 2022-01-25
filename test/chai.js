@@ -21,8 +21,8 @@ chai.use(chaiHttp);
 
 describe("General tests", () => {
     before((done) => {
+        Document.deleteMany({}, () => done());
         app.on("booted", () => {
-            Document.deleteMany({}, () => done());
             //User.deleteMany({}, () => {});
         });
     });
@@ -191,7 +191,7 @@ describe("General tests", () => {
             user: "test",
             docid: 1,
             name: "test",
-            data: "test content"
+            data: "test content",
         };
         it("Reset Documents function", (done) => {
             chai.request(app)
