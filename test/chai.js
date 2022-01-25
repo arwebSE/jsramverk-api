@@ -22,7 +22,8 @@ chai.use(chaiHttp);
 describe("General tests", () => {
     before((done) => {
         app.on("booted", () => {
-            Document.deleteMany({}, () => done());
+            done();
+            Document.deleteMany({}, () => {});
             //User.deleteMany({}, () => {});
         });
     });
